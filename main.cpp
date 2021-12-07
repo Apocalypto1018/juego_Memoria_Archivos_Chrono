@@ -182,8 +182,9 @@ void elegirCategoria(int *categoria)
 void juego(int filas, int columnas, int categoria)
 {
 	srand(time(0)); // seteando la semilla
+	unsigned t0, t1;
 
-	int jugar = 1;
+	t0 = clock(); int jugar = 1;
 
 	int generar = 1;
 	int pos1 = 0;
@@ -274,8 +275,6 @@ void juego(int filas, int columnas, int categoria)
 			generar++;
 			vaciar(posAcertadas);
 		}
-
-		auto inicio = chrono::system_clock::now();
 
 		do
 		{
@@ -379,17 +378,14 @@ void juego(int filas, int columnas, int categoria)
 		if (fin == 1)
 		{ // si terminar el usuario de descubrir los pares...
 
-			auto tFin = chrono::system_clock::now();
+			t1 = clock();
 
-			chrono::duration<float, milli> duracion = tFin - inicio;
-
-			float tiempo = duracion.count();
-			tiempo = tiempo / 6000;
+			double tiempo = (double(t1 - t0) / CLOCKS_PER_SEC);
 			do
 			{
 				system("cls");
 				gotoxy(1, 0);
-				cout << "*" << alias << "Has terminado el Juego!!" << endl
+				cout << "*" << alias << " Has terminado el Juego!!" << endl
 					 << endl;
 				gotoxy(1, 3);
 				cout << "*Duracion: " << intentos << " intentos totales." << endl
@@ -430,7 +426,8 @@ void juego(int filas, int columnas, int categoria)
 void juegoMaquina(int filas, int columnas, int categoria)
 {
 	srand(time(0)); // seteando la semilla
-
+	unsigned t0, t1;
+	t0 = clock();
 	int jugar = 1;
 
 	int generar = 1;
@@ -446,7 +443,7 @@ void juegoMaquina(int filas, int columnas, int categoria)
 	int correcto = 0;
 	bool maquinaTonta = false;
 
-	string alias = "Computadora";
+	string alias = "PC";
 
 	string **matriz = new string *[columnas];
 
@@ -484,7 +481,6 @@ void juegoMaquina(int filas, int columnas, int categoria)
 			generar++;
 			vaciar(posAcertadas);
 		}
-		auto inicio = chrono::system_clock::now();
 
 		do
 		{
@@ -582,21 +578,24 @@ void juegoMaquina(int filas, int columnas, int categoria)
 		{ // si terminar el usuario de descubrir los pares...
 			do
 			{
-				auto tFin = chrono::system_clock::now();
+				t1 = clock();
 
-				chrono::duration<float, milli> duracion = tFin - inicio;
-
-				float tiempo = duracion.count();
-				tiempo = tiempo / 6000;
+				float tiempo = (float(t1 - t0) / CLOCKS_PER_SEC);
 				system("cls");
-				cout << "*" << alias << " has terminado el Juego!!" << endl
-					 << endl
-					 << "*Duracion: " << intentos << " intentos totales." << endl
-					 << endl;
-				agregarNuevoJuego(alias, intentos, categoria, tiempo);
-				cout << "*Datos del juego almacenados en el archivo correctamente!!" << endl
-					 << endl;
+				gotoxy(5, 0);
+				cout<< "*Simulacion Terminada!!" << endl
+					<< endl;
+				gotoxy(1, 3);
+				cout << "*Duracion: " << intentos << " intentos totales." << endl
+					<< endl;
+				gotoxy(1, 5);
+				cout << "*Tiempo total de Juego: " << tiempo << " Segundos." << endl;
 
+				agregarNuevoJuego(alias, intentos, categoria, tiempo);
+				gotoxy(1, 7);
+				cout << "*Datos del juego almacenados en el archivo correctamente!!" << endl
+					<< endl;
+				
 				jugar = 0;
 				
 				Sleep(MI_SLEEP * 5);
@@ -686,7 +685,7 @@ void coordenada(int *f, int *c, int pos)
 // funcion que muestra el puntaje
 void puntaje(int aciertos, int intentos, string nombre)
 {
-	cout << "                               MEMORIA      " << endl
+	cout << "                                 MEMORIA      " << endl
 		 << endl;
 	cout << "*Jugador: " << nombre;
 	cout << "   ||    *Numero de Intentos: " << intentos << "    ||    *Pares encontrados: " << aciertos << endl
@@ -960,8 +959,8 @@ void agregarNuevoJuego(string alias, int intentos, int categoria, float tiempo)
 		archivo << "Alias: ";
 		archivo << alias;
 		// intentosTotales
-		archivo << " | ";
-		string aux(STRING(intentos));
+		archivo << " | intentos: ";
+		string aux(to_string(intentos));
 		archivo << aux;
 
 		// categoria
